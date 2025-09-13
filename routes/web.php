@@ -1,91 +1,32 @@
 <?php
 
+use App\Http\Controllers\AdmissionController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\PageContraller;
+use App\Models\Admission;
 use App\Models\Company;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    $companies = Company::all();
-    return view('home',compact('companies'));
-});
-Route::get("/about",function(){
-    return view("about");
-});
+Route::get('/',[PageContraller::class,'home'])->name('home');
+Route::get("/about",[PageContraller::class,"about"])->name("about");
 
+Route::get("/contact",[PageContraller::class,"contact"])->name("contact");
 
-Route::get("/contact",function(){
-    return view("contact");
-});
+Route::get("/courses",[CourseController::class,"course"])->name("course");
 
-Route::get("/courses",function(){
-    $courses = Course::all();
-    return view("course",compact('courses'));
-});
+Route::get("/service",[PageContraller::class,"service"])->name("service");
 
-Route::get("/service",function(){
-    return view("service");
-});
+Route::post("/company/store",[CompanyController::class,"store"]);
 
-Route::post("/company/store",function(Request $request){
+Route::post("/course/store",[CourseController::class,"store"]);
 
-    $company = new Company();
+Route::get("/course/edit/{id}",[CourseController::class,"edit"]);
 
-    $company->name = $request->name;
-    $company->email = $request->email;
-    $company->phone = $request->phone;
-    $company->address = $request->address;
+Route::patch("/course/edit/{id}",[CourseController::class,"update"]);
 
-    $company->save();
-    return redirect("/");
-});
+Route::delete("/course/delete/{id}",[CourseController::class,"delete"]);
 
-Route::post("/course/store",function(Request $request){
-   $course = new Course();
-
-   $course->name = $request->name;
-   $course->category = $request->category;
-   $course->price = $request->price;
-   $course->description = $request->description;
-   $file = $request->image;
-   if($file){
-    $file_name = uniqid().".".$file->getClientOriginalExtension();
-    $file->move("photos",$file_name);
-    $course->image = "photos/$file_name";
-   }
-   $course->save();
-   return redirect("/courses");
-});
-
-Route::get("/course/edit/{id}",function($id){
-    $course = Course::find($id);
-
-    return view("courseEdit",compact("course"));
-});
-
-Route::patch("/course/edit/{id}",function(Request $request,$id){
-    $course = Course::find($id);
-    $course->name = $request->name;
-    $course->category = $request->category;
-    $course->price = $request->price;
-    $course->description = $request->description;
-    $file = $request->image;
-    if($file){
-        $file_name = uniqid().".".$file->getClientOriginalExtension();
-        $file->move("photos",$file_name);
-        $course->image = "photos/$file_name";
-    }
-    $course->save();
-    return redirect("/courses");
-});
-
-Route::delete("/course/delete/{id}",function($id){
-    $course = Course::find($id);
-
-    $course->delete();
-    return redirect("/courses");
-});
-
-Route::get("/delete",function(){
-    return view("delete_pop_up");
-});
+Route::resource("admission",AdmissionController::class)->names("admission");

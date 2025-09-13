@@ -15,6 +15,7 @@
     </style>
 </head>
 <body>
+    @include('sweetalert::alert')
 <header>
     <x-navbar/>
 </header>

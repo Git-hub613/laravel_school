@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('courses', function (Blueprint $table) {
+        Schema::create('admissions', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string("category");
-            $table->enum("type",["Online","Physical"])->default("Online");
-            $table->double("price");
-            $table->string("image")->nullable();
-            $table->longText("description");
+            $table->string("name");
+            $table->string("email");
+            $table->double("phone");
+            $table->foreignId("course_id")->constrained();
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('courses');
+        Schema::dropIfExists('admissions');
     }
 };
