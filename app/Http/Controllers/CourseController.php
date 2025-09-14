@@ -19,6 +19,7 @@ class CourseController extends Controller
    $course->category = $request->category;
    $course->price = $request->price;
    $course->description = $request->description;
+   $course->type = $request->type;
    $file = $request->image;
    if($file){
     $file_name = uniqid().".".$file->getClientOriginalExtension();
